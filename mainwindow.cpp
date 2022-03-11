@@ -13,7 +13,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
     action_flags = Multiplication | Addition | Subtraction;
+    ins_left = 0;
+
     LoadSettings();
+    EndGame();
 }
 
 MainWindow::~MainWindow()
@@ -76,7 +79,7 @@ void MainWindow::on_actionPause_Game_triggered()
 
 void MainWindow::on_actionEnd_Game_triggered()
 {
-
+    EndGame();
 }
 
 // SET SETTINGGS
@@ -219,6 +222,12 @@ void MainWindow::on_actionSubtraction_triggered(bool checked)
 //GUI
 void MainWindow::on_btn_done_clicked()
 {
+    if(ins_left <= 0)
+    {
+        EndGame();
+        return;
+    }
+    qDebug() << " Correct: " + QString::number(correct_result) << ". Input: " + ui->edit_input->text();
     if(QString::number(correct_result) == ui->edit_input->text())
     {
         NextTurn();
@@ -236,6 +245,7 @@ void MainWindow::on_btn_done_clicked()
 void MainWindow::on_btn_giveUp_clicked()
 {
     QMessageBox::critical(this, "LOOOOOOOOSER!", "You losed looser... I don't wanna see you bitch!");
+    EndGame();
 }
 
 // GAME
@@ -286,7 +296,8 @@ void MainWindow::NextTurn()
         correct_result = a - b;
         break;
     default:
-
+        sign = '#';
+        correct_result = -1;
         break;
     }
 
@@ -304,12 +315,12 @@ int MainWindow::RandomAction(int av_flags)
             i++;
         bc_av/=2;
     }
-    i--;
+
     if(i == -1)
         return -1;
 
     int* avail = new int[i];
-    int j = i;
+    int j = i - 1;
     if(av_flags & Multiplication) { avail[j] = Multiplication; j--; }
     if(av_flags & Division) { avail[j] = Division; j--; }
     if(av_flags & Addition) { avail[j] = Addition; j--; }
@@ -320,6 +331,12 @@ int MainWindow::RandomAction(int av_flags)
     c = avail[rand];
     delete [] avail;
     return c;
+}
+
+void MainWindow::EndGame()
+{
+    ui->edit_input->setText("");
+    ui->label_Output->setText(start_label_css + "*Start A New Game*</p>");
 }
 
 bool MainWindow::RandomNegNumber()

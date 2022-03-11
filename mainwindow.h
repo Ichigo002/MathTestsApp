@@ -69,6 +69,7 @@ private:
     bool RandomNegNumber();
     void NextTurn();
     int RandomAction(int av_flags);
+    void EndGame();
 
 
     Ui::MainWindow *ui;
