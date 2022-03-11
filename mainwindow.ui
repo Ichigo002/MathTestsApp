@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>517</width>
+    <height>263</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Are you good from Math?</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="label_Output">
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:28pt; font-weight:700;&quot;&gt;-6 * 256 =&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="edit_input">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font-size: 28px;
+font-weight: bold;
+text-align: center</string>
+      </property>
+      <property name="inputMask">
+       <string/>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="maxLength">
+       <number>32767</number>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignHCenter|Qt::AlignTop</set>
+      </property>
+      <property name="placeholderText">
+       <string>Result</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>10</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="btn_giveUp">
+        <property name="styleSheet">
+         <string notr="true">font-size: 24px;
+</string>
+        </property>
+        <property name="text">
+         <string>Give Up</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_done">
+        <property name="styleSheet">
+         <string notr="true">font-size: 24px;
+</string>
+        </property>
+        <property name="text">
+         <string>Done</string>
+        </property>
+        <property name="shortcut">
+         <string>Return</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>517</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>rqfasgag</string>
+   </property>
+   <property name="toolTipDuration">
+    <number>-1</number>
+   </property>
+   <widget class="QMenu" name="menuGame">
+    <property name="title">
+     <string>Game</string>
+    </property>
+    <addaction name="actionNew_Game"/>
+    <addaction name="actionPause_Game"/>
+    <addaction name="actionEnd_Game"/>
+   </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <widget class="QMenu" name="menuLimits">
+     <property name="title">
+      <string>Limits</string>
+     </property>
+     <addaction name="actionLowest_Number"/>
+     <addaction name="actionHighest_Number"/>
+    </widget>
+    <widget class="QMenu" name="menuFloating_numbers">
+     <property name="title">
+      <string>Floating Numbers</string>
+     </property>
+     <addaction name="actionFloating_numbers_2"/>
+     <addaction name="actionDigits_After_The_Decimal"/>
+    </widget>
+    <widget class="QMenu" name="menuNegative">
+     <property name="title">
+      <string>Negative Numbers</string>
+     </property>
+     <addaction name="actionAlways"/>
+     <addaction name="actionSometimes"/>
+     <addaction name="actionNever"/>
+    </widget>
+    <widget class="QMenu" name="menuOperations">
+     <property name="title">
+      <string>Operations</string>
+     </property>
+     <addaction name="actionmultiplication"/>
+     <addaction name="actionDivision"/>
+     <addaction name="actionAddition"/>
+     <addaction name="actionSubtraction"/>
+    </widget>
+    <addaction name="actionAmount_Instances"/>
+    <addaction name="menuLimits"/>
+    <addaction name="separator"/>
+    <addaction name="menuFloating_numbers"/>
+    <addaction name="menuNegative"/>
+    <addaction name="menuOperations"/>
+    <addaction name="separator"/>
+    <addaction name="actionReturn_Default_Settings"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionAbout"/>
+    <addaction name="actionHelp"/>
+   </widget>
+   <addaction name="menuGame"/>
+   <addaction name="menuSettings"/>
+   <addaction name="menuAbout"/>
+  </widget>
+  <action name="actionNew_Game">
+   <property name="text">
+    <string>New Game</string>
+   </property>
+   <property name="toolTip">
+    <string>Start a new game</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionPause_Game">
+   <property name="text">
+    <string>Pause Game</string>
+   </property>
+   <property name="toolTip">
+    <string>Pause current game</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionLowest_Number">
+   <property name="text">
+    <string>Lowest Number</string>
+   </property>
+   <property name="toolTip">
+    <string>Lowest Number which app can use to instance</string>
+   </property>
+  </action>
+  <action name="actionHighest_Number">
+   <property name="text">
+    <string>Highest Number</string>
+   </property>
+   <property name="toolTip">
+    <string>Highest Number which can app use to instance</string>
+   </property>
+  </action>
+  <action name="actionEnd_Game">
+   <property name="text">
+    <string>End Game</string>
+   </property>
+   <property name="toolTip">
+    <string>End current game</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Backspace</string>
+   </property>
+  </action>
+  <action name="actionReturn_Default_Settings">
+   <property name="text">
+    <string>Return Default Settings</string>
+   </property>
+   <property name="toolTip">
+    <string>Return to default settings built-in app. Warning! Resets ALL settings.</string>
+   </property>
+  </action>
+  <action name="actionDigits_After_The_Decimal">
+   <property name="text">
+    <string>Digits After The Decimal</string>
+   </property>
+   <property name="toolTip">
+    <string>Allow set number of digits after the decimal. Setting works only when floating number checked.</string>
+   </property>
+  </action>
+  <action name="actionSometimes">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Sometimes (50%)</string>
+   </property>
+   <property name="toolTip">
+    <string>App sometimes use negative number in instances.</string>
+   </property>
+  </action>
+  <action name="actionAlways">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Always (100%)</string>
+   </property>
+   <property name="toolTip">
+    <string>App always use negative number in instances.</string>
+   </property>
+  </action>
+  <action name="actionNever">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Never (0%)</string>
+   </property>
+   <property name="toolTip">
+    <string>App never use negative number in instances.</string>
+   </property>
+  </action>
+  <action name="actionFloating_numbers_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Floating numbers</string>
+   </property>
+   <property name="toolTip">
+    <string>Activate using floating numbers too.</string>
+   </property>
+  </action>
+  <action name="actionAmount_Instances">
+   <property name="text">
+    <string>Amount Instances</string>
+   </property>
+   <property name="toolTip">
+    <string>Amount Instances which you play</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>Help</string>
+   </property>
+  </action>
+  <action name="actionmultiplication">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Multiplication</string>
+   </property>
+  </action>
+  <action name="actionDivision">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Division</string>
+   </property>
+  </action>
+  <action name="actionAddition">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Addition</string>
+   </property>
+  </action>
+  <action name="actionSubtraction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Subtraction</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
