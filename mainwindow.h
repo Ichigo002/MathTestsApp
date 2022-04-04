@@ -7,6 +7,8 @@
 #include <QRandomGenerator>
 #include <math.h>
 #include <QSettings>
+#include <vector>
+#include <QTimer>
 #include "EnumsStructs.h"
 
 
@@ -61,6 +63,12 @@ private slots:
 
     void on_actionSubtraction_triggered(bool checked);
 
+    void CountTime();
+
+    void on_actionResume_triggered();
+
+    void on_actionAbout_triggered();
+
 private:
     void SetSettingsForMenu();
     void CheckNegFreqMenu(NegativeFreq nf);
@@ -69,7 +77,8 @@ private:
     bool RandomNegNumber();
     void NextTurn();
     int RandomAction(int av_flags);
-    void EndGame();
+    void SetTimeCounter(int time);
+    void SetQuestionTime(int time);
 
 
     Ui::MainWindow *ui;
@@ -84,9 +93,14 @@ private:
 
     NegativeFreq neg_freq;
     // SYSTEM VALUES //
+    bool pause;
 
+    QTimer* timer;
+    int time;
+    int each_time;
     float correct_result;
     int ins_left;
+    int mistakes;
     int action_flags;
     const QString start_label_css = "<p style='font-size:28pt; font-weight:700; text-align: center;'>";
 

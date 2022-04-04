@@ -6,15 +6,67 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>384</width>
-    <height>249</height>
+    <width>517</width>
+    <height>279</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Are you good from Math?</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="icon.qrc">
+    <normaloff>:/i/MyAppIcon.ico</normaloff>:/i/MyAppIcon.ico</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLineEdit" name="line_time">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+          <italic>false</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgba(255, 255, 255, 0);
+border: none;
+color: Black;</string>
+        </property>
+        <property name="text">
+         <string>Total time:</string>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="line_time_2">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+          <italic>false</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgba(255, 255, 255, 0);
+border: none;
+color: Black;</string>
+        </property>
+        <property name="text">
+         <string>Question Time: </string>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
     <item>
      <widget class="QLabel" name="label_Output">
       <property name="text">
@@ -101,7 +153,7 @@ text-align: center</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>384</width>
+     <width>517</width>
      <height>21</height>
     </rect>
    </property>
@@ -117,6 +169,7 @@ text-align: center</string>
     </property>
     <addaction name="actionNew_Game"/>
     <addaction name="actionPause_Game"/>
+    <addaction name="actionResume"/>
     <addaction name="actionEnd_Game"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
@@ -168,7 +221,6 @@ text-align: center</string>
      <string>About</string>
     </property>
     <addaction name="actionAbout"/>
-    <addaction name="actionHelp"/>
    </widget>
    <addaction name="menuGame"/>
    <addaction name="menuSettings"/>
@@ -333,7 +385,17 @@ text-align: center</string>
     <string>Subtraction</string>
    </property>
   </action>
+  <action name="actionResume">
+   <property name="text">
+    <string>Resume Game</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+P</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="icon.qrc"/>
+ </resources>
  <connections/>
 </ui>

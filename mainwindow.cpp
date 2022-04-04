@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <dialogsettinginput.h>
+#include <windialog.h>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -13,10 +14,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
     action_flags = Multiplication | Addition | Subtraction;
-    ins_left = 0;
-
     LoadSettings();
-    EndGame();
+    on_actionEnd_Game_triggered();
+    SetTimeCounter(0);
+    SetQuestionTime(0);
+    pause = true;
+
+    timer = new QTimer(this);
+    QObject::connect(timer, SIGNAL(timeout()), this, SLOT(CountTime()));
 }
 
 MainWindow::~MainWindow()
@@ -34,6 +39,7 @@ void MainWindow::SaveSettings()
     sett.setValue("dec", places_after_dec);
     sett.setValue("fltg", floating);
     sett.setValue("neg-freq", neg_freq);
+    sett.setValue("op", action_flags);
 }
 
 void MainWindow::LoadSettings()
@@ -44,6 +50,7 @@ void MainWindow::LoadSettings()
     max_no = sett.value("max").toInt();
     places_after_dec = sett.value("dec").toInt();
     floating = sett.value("fltg").toBool();
+    action_flags = sett.value("op").toInt();
 
     int v = sett.value("neg-freq").toInt();
     switch(v)
@@ -68,18 +75,47 @@ void MainWindow::LoadSettings()
 // GAME MENU
 void MainWindow::on_actionNew_Game_triggered()
 {
+    if(action_flags == 0)
+    {
+        QMessageBox::critical(this, "Chosen no operations", "You didn't choose the operations math.");
+        return;
+    }
     ins_left = amount_ins;
+    mistakes = 0;
+    time = 0;
+    each_time = 0;
+    pause = false;
+
     NextTurn();
+    timer->start(1000);
 }
 
 void MainWindow::on_actionPause_Game_triggered()
 {
+    timer->stop();
+    pause = true;
+}
 
+void MainWindow::on_actionResume_triggered()
+{
+    if(ins_left > 0)
+    {
+        pause = false;
+        timer->start(1000);
+    }
 }
 
 void MainWindow::on_actionEnd_Game_triggered()
 {
-    EndGame();
+    if(time != 0)
+        timer->stop();
+    time = 0;
+    SetTimeCounter(0);
+    SetQuestionTime(0);
+    ins_left = 0;
+    pause = true;
+    ui->label_Output->setText(start_label_css + "Start A New Game</p>");
+    ui->edit_input->setText("");
 }
 
 // SET SETTINGGS
@@ -222,21 +258,49 @@ void MainWindow::on_actionSubtraction_triggered(bool checked)
 //GUI
 void MainWindow::on_btn_done_clicked()
 {
-    if(ins_left <= 0)
+    if(pause)
     {
-        EndGame();
+        ui->edit_input->setText("");
         return;
     }
-    qDebug() << " Correct: " + QString::number(correct_result) << ". Input: " + ui->edit_input->text();
+    if(ins_left <= 0)
+    {
+        if(time != 0)
+            timer->stop();
+        WinDialog dialog(mistakes, amount_ins - mistakes, time, amount_ins);
+        dialog.exec();
+        time = 0;
+        on_actionEnd_Game_triggered();
+    }
+
     if(QString::number(correct_result) == ui->edit_input->text())
     {
+        each_time = 0;
+        if(ins_left <= 0)
+        {
+            if(time != 0)
+                timer->stop();
+            WinDialog dialog(mistakes, amount_ins - mistakes, time, amount_ins);
+            dialog.exec();
+            time = 0;
+            on_actionEnd_Game_triggered();
+        }
+        else
+        {
+            NextTurn();
+            ui->edit_input->setText("");
+        }
+    }
+    else if (ins_left > 0)
+    {
+        mistakes++;
+        QMessageBox::information(this, "Info!", "You are wrong! Correct result is " + QString::number(correct_result));
+        each_time = 0;
         NextTurn();
         ui->edit_input->setText("");
     }
     else
     {
-        QMessageBox::information(this, "Info!", "You are wrong! Correct result is " + QString::number(correct_result));
-        NextTurn();
         ui->edit_input->setText("");
     }
 }
@@ -244,8 +308,11 @@ void MainWindow::on_btn_done_clicked()
 
 void MainWindow::on_btn_giveUp_clicked()
 {
+    if(ins_left <= 0 || pause)
+        return;
+
     QMessageBox::critical(this, "LOOOOOOOOSER!", "You losed looser... I don't wanna see you bitch!");
-    EndGame();
+    on_actionEnd_Game_triggered();
 }
 
 // GAME
@@ -256,24 +323,29 @@ void MainWindow::NextTurn()
 
     float rand_a = QRandomGenerator::global()->generateDouble() * (max_no - min_no + 1) + min_no;
     float rand_b = QRandomGenerator::global()->generateDouble() * (max_no - min_no + 1) + min_no;
-    float a, b;
+    float rand_c = QRandomGenerator::global()->generateDouble() * (max_no - min_no + 1) + min_no;
+    float a, b, c;
 
     if(floating)
     {
         int factor = pow(10, places_after_dec);
         a = round(rand_a * factor) / factor;
         b = round(rand_b * factor) / factor;
+        c = round(rand_c * factor) / factor;
     }
     else
     {
         a = trunc(rand_a);
         b = trunc(rand_b);
+        c = trunc(rand_c);
     }
 
     if(RandomNegNumber())
         a *= -1;
     if(RandomNegNumber())
         b *= -1;
+    if(RandomNegNumber())
+        c *= -1;
 
     QChar sign = '#';
 
@@ -285,7 +357,8 @@ void MainWindow::NextTurn()
         break;
     case Division:
         sign = '/';
-        correct_result = a / b;
+        correct_result = c;
+        a = correct_result * b;
         break;
     case Addition:
         sign ='+';
@@ -296,8 +369,7 @@ void MainWindow::NextTurn()
         correct_result = a - b;
         break;
     default:
-        sign = '#';
-        correct_result = -1;
+        QMessageBox::information(this,"Error", "Raw value");
         break;
     }
 
@@ -308,35 +380,38 @@ void MainWindow::NextTurn()
 
 int MainWindow::RandomAction(int av_flags)
 {
-    int c = 0, i = 0, bc_av = av_flags;
-    while(bc_av!=0)
+    QVector<int> rand_flags;
+
+    if(av_flags & Multiplication)
     {
-        if(bc_av % 2 != 0)
-            i++;
-        bc_av/=2;
+        rand_flags.push_back(Multiplication);
+    }
+    if(av_flags & Division)
+    {
+        rand_flags.push_back(Division);
+    }
+    if(av_flags & Subtraction)
+    {
+        rand_flags.push_back(Subtraction);
+    }
+    if(av_flags & Addition)
+    {
+        rand_flags.push_back(Addition);
     }
 
-    if(i == -1)
-        return -1;
+    int rand = QRandomGenerator::global()->generateDouble() * rand_flags.count();
 
-    int* avail = new int[i];
-    int j = i - 1;
-    if(av_flags & Multiplication) { avail[j] = Multiplication; j--; }
-    if(av_flags & Division) { avail[j] = Division; j--; }
-    if(av_flags & Addition) { avail[j] = Addition; j--; }
-    if(av_flags & Subtraction) { avail[j] = Subtraction; j--; }
-
-    int rand = QRandomGenerator::global()->generateDouble() * (i+1);
-
-    c = avail[rand];
-    delete [] avail;
-    return c;
+    return rand_flags.at(rand);
 }
 
-void MainWindow::EndGame()
+void MainWindow::SetTimeCounter(int time)
 {
-    ui->edit_input->setText("");
-    ui->label_Output->setText(start_label_css + "*Start A New Game*</p>");
+    ui->line_time->setText("Total Time: " + QString::number(time));
+}
+
+void MainWindow::SetQuestionTime(int time)
+{
+    ui->line_time_2->setText("Question Time: " + QString::number(time));
 }
 
 bool MainWindow::RandomNegNumber()
@@ -354,3 +429,24 @@ bool MainWindow::RandomNegNumber()
     }
     return false;
 }
+
+void MainWindow::CountTime()
+{
+    time++;
+    each_time++;
+    SetTimeCounter(time);
+    SetQuestionTime(each_time);
+}
+
+
+void MainWindow::on_actionAbout_triggered()
+{
+    QString c = "Desktop App created by Wiktor B. at March 2022.\n"
+                "All rights are reserved because are reserved.\n"
+                "\n"
+                "You can check your math skills!\n"
+                "Good luck!";
+
+    QMessageBox::about(this, "About...", c);
+}
+
