@@ -28,6 +28,7 @@ MainWindow::~MainWindow()
 {
     SaveSettings();
     delete ui;
+    delete timer;
 }
 
 void MainWindow::SaveSettings()
@@ -96,7 +97,9 @@ void MainWindow::on_actionNew_Game_triggered()
 
 void MainWindow::on_actionPause_Game_triggered()
 {
-    timer->stop();
+    if (timer && timer->isActive()) {
+        timer->stop();
+    }
     pause = true;
     ui->edit_input->setDisabled(true);
     ui->edit_input->clear();
@@ -114,8 +117,9 @@ void MainWindow::on_actionResume_triggered()
 
 void MainWindow::on_actionEnd_Game_triggered()
 {
-    if(time != 0)
+    if (timer && time != 0 && timer->isActive()) {
         timer->stop();
+    }
     time = 0;
     SetTimeCounter(0);
     SetQuestionTime(0);
@@ -274,8 +278,9 @@ void MainWindow::on_btn_done_clicked()
     }
     if(ins_left <= 0)
     {
-        if(time != 0)
+        if (timer && time != 0 && timer->isActive()) {
             timer->stop();
+        }
         WinDialog dialog(mistakes, amount_ins - mistakes, time, amount_ins);
         dialog.exec();
         time = 0;
@@ -287,8 +292,9 @@ void MainWindow::on_btn_done_clicked()
         each_time = 0;
         if(ins_left <= 0)
         {
-            if(time != 0)
+            if (timer && time != 0 && timer->isActive()) {
                 timer->stop();
+            }
             WinDialog dialog(mistakes, amount_ins - mistakes, time, amount_ins);
             dialog.exec();
             time = 0;
