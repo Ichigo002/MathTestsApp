@@ -98,6 +98,8 @@ void MainWindow::on_actionPause_Game_triggered()
 {
     timer->stop();
     pause = true;
+    ui->edit_input->setDisabled(true);
+    ui->edit_input->clear();
 }
 
 void MainWindow::on_actionResume_triggered()
@@ -106,6 +108,7 @@ void MainWindow::on_actionResume_triggered()
     {
         pause = false;
         timer->start(1000);
+        ui->edit_input->setDisabled(false);
     }
 }
 
