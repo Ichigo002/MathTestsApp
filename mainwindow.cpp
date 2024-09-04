@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     QCoreApplication::setApplicationName("Math Operations Tester");
 
     ui->setupUi(this);
-    action_flags = Multiplication | Addition | Subtraction;
+    action_flags = Multiplication + Addition + Subtraction + Division;
     LoadSettings();
     on_actionEnd_Game_triggered();
     SetTimeCounter(0);
@@ -44,6 +44,10 @@ void MainWindow::SaveSettings()
 
 void MainWindow::LoadSettings()
 {
+    // return default in case if user has no saved settings
+    on_actionReturn_Default_Settings_triggered();
+
+
     QSettings sett;
     amount_ins = sett.value("amount").toInt();
     min_no = sett.value("min").toInt();
@@ -128,6 +132,8 @@ void MainWindow::on_actionReturn_Default_Settings_triggered()
     floating = false;
     places_after_dec = 1;
     neg_freq = Never;
+
+    action_flags = Multiplication + Division + Addition + Subtraction;
 
     SetSettingsForMenu();
 }
